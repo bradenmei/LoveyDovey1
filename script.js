@@ -28,6 +28,12 @@
 
   const HEART_COUNT = 18;
 
+  const POLAROID_COUNT = 16;
+  const POLAROID_IMAGES = Array.from(
+    { length: POLAROID_COUNT },
+    (_, i) => `images/pic${i + 1}.jpg`
+  );
+
   function pad(value) {
     return String(value).padStart(2, "0");
   }
@@ -100,10 +106,29 @@
     field.appendChild(fragment);
   }
 
-  function init() {
-    createFloatingHearts();
+  function initPolaroid() {
+    const polaroid = document.getElementById("polaroid");
+    const img = document.getElementById("polaroid-img");
+    if (!polaroid || !img) return;
+
+    let currentIndex = 0;
+
+    polaroid.addEventListener("click", function () {
+      currentIndex = (currentIndex + 1) % POLAROID_COUNT;
+      img.src = POLAROID_IMAGES[currentIndex];
+      img.alt = `Memory ${currentIndex + 1} of ${POLAROID_COUNT}`;
+    });
+  }
+
+  function initTimer() {
     updateTimer();
     setInterval(updateTimer, 1000);
+  }
+
+  function init() {
+    createFloatingHearts();
+    initPolaroid();
+    initTimer();
   }
 
   if (document.readyState === "loading") {

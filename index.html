@@ -18,20 +18,26 @@
   </header>
   
   <main class="home-main">
-    <section class="photo-section" aria-label="Our photo">
-      <figure class="photo-frame">
-        <div class="photo-inner">
-          <!-- Replace src with your photo path, e.g. images/us.jpg -->
+    <section class="polaroid-section" aria-label="Our photos">
+      <button
+        type="button"
+        class="polaroid"
+        id="polaroid"
+        aria-label="Show next photo"
+      >
+        <span class="polaroid-photo-area">
           <img
-            src="https://placehold.co/420x520/FFC5D3/F8C5FA?text=Add+Our+Photo"
-            alt="A photo of us together"
-            class="couple-photo"
-            width="420"
-            height="520"
+            id="polaroid-img"
+            class="polaroid-img"
+            src="images/pic1.jpg"
+            alt="Memory 1 of 16"
+            width="320"
+            height="320"
+            draggable="false"
           >
-        </div>
-        <figcaption class="photo-caption">my favorite person</figcaption>
-      </figure>
+        </span>
+        <span class="polaroid-footer" aria-hidden="true"></span>
+      </button>
     </section>
   </main>
 
