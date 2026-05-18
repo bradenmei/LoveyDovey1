@@ -20,6 +20,12 @@
   <main class="home-main">
     <section class="polaroid-section" aria-label="Our photos">
       <div class="polaroid-stack" data-ui-zone>
+        <div class="polaroid-decorations" aria-hidden="true">
+          <div class="polaroid-bow"><span class="polaroid-bow-knot"></span></div>
+          <span class="polaroid-decor polaroid-decor--sparkle">✦</span>
+          <span class="polaroid-decor polaroid-decor--heart">♡</span>
+          <span class="polaroid-decor polaroid-decor--dot">❀</span>
+        </div>
         <div class="polaroid polaroid--layer polaroid--back" aria-hidden="true">
           <span class="polaroid-photo-area polaroid-photo-area--empty"></span>
           <span class="polaroid-footer"></span>
@@ -54,20 +60,20 @@
   <aside class="timer-panel" data-ui-zone aria-live="polite">
     <section class="timer-block" aria-label="Time together">
       <p class="timer-label">⏳ Together for</p>
-      <motion-div class="timer-grid timer-grid--together">
+      <div class="timer-grid timer-grid--together">
         <div class="timer-unit">
           <span id="timer-months" class="timer-value">0</span>
           <span class="timer-name">months</span>
-        </motion-div>
+        </div>
         <div class="timer-unit">
           <span id="timer-days" class="timer-value">0</span>
           <span class="timer-name">days</span>
-        </motion-div>
+        </div>
         <div class="timer-unit">
           <span id="timer-hours" class="timer-value">0</span>
           <span class="timer-name">hours</span>
-        </motion-div>
-      </motion-div>
+        </div>
+      </div>
     </section>
 
     <section class="timer-block timer-block--countdown" aria-label="Countdown to next meeting">

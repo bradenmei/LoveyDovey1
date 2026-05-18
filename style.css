@@ -52,7 +52,7 @@ body {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 0;
+  z-index: 5;
   overflow: hidden;
 }
 
@@ -60,10 +60,21 @@ body {
   position: absolute;
   top: 0;
   left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1em;
+  height: 1em;
+  padding: 0;
+  margin: 0;
   pointer-events: auto;
-  cursor: default;
+  cursor: pointer;
+  appearance: none;
+  background: transparent;
+  border: none;
+  outline: none;
   line-height: 1;
-  opacity: 0.62;
+  opacity: 0.7;
   color: var(--color-deep);
   filter: drop-shadow(0 3px 8px var(--color-shadow));
   transition:
@@ -72,42 +83,61 @@ body {
     transform var(--transition);
   user-select: none;
   will-change: left, top;
-  z-index: 1;
+  z-index: 5;
+}
+
+.floating-heart::before {
+  content: "";
+  position: absolute;
+  inset: -0.65em;
+}
+
+.floating-heart .heart-glyph {
+  display: block;
+  line-height: 1;
+  pointer-events: none;
 }
 
 .floating-heart:hover,
-.floating-heart:focus-visible {
+.floating-heart:focus-visible,
+.floating-heart.is-hovered {
   opacity: 1;
-  transform: scale(1.28);
-  z-index: 3;
-  filter: drop-shadow(0 6px 14px rgba(92, 61, 74, 0.28));
+  transform: scale(1.35);
+  z-index: 20;
+  filter: drop-shadow(0 6px 16px rgba(232, 164, 184, 0.55));
 }
 
 .floating-heart .heart-tooltip {
   position: absolute;
-  bottom: calc(100% + 0.6rem);
+  bottom: calc(100% + 0.35rem);
   left: 50%;
-  transform: translateX(-50%) translateY(6px);
-  padding: 0.45rem 0.9rem;
-  font-family: var(--font-body);
-  font-size: 0.8rem;
+  transform: translateX(-50%) translateY(4px);
+  padding: 0;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-style: italic;
   font-weight: 600;
-  max-width: 14rem;
-  white-space: normal;
+  max-width: 16rem;
+  white-space: nowrap;
   text-align: center;
   color: var(--color-text);
-  background: var(--color-white);
-  border: 1px solid var(--color-main);
-  border-radius: var(--radius-pill);
-  box-shadow: 0 4px 16px var(--color-shadow);
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
   opacity: 0;
   visibility: hidden;
   transition: opacity var(--transition), transform var(--transition), visibility var(--transition);
   pointer-events: none;
+  text-shadow:
+    0 0 12px var(--color-white),
+    0 0 20px var(--color-white),
+    0 1px 2px rgba(255, 255, 255, 0.9);
 }
 
 .floating-heart:hover .heart-tooltip,
-.floating-heart:focus-visible .heart-tooltip {
+.floating-heart:focus-visible .heart-tooltip,
+.floating-heart.is-hovered .heart-tooltip {
   opacity: 1;
   visibility: visible;
   transform: translateX(-50%) translateY(0);
@@ -115,7 +145,7 @@ body {
 
 .site-header {
   position: relative;
-  z-index: 2;
+  z-index: 10;
   display: flex;
   justify-content: flex-end;
   padding: 1.25rem 1.5rem;
@@ -155,6 +185,11 @@ body {
   align-items: center;
   justify-content: center;
   padding: 1rem 1.5rem 6rem;
+  pointer-events: none;
+}
+
+.home-main > * {
+  pointer-events: auto;
 }
 
 /* ─── 3D Polaroid stack ─── */
@@ -170,6 +205,131 @@ body {
   position: relative;
   width: min(100%, 20rem);
   min-height: 26rem;
+  padding-top: 1.5rem;
+}
+
+.polaroid-decorations {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 30;
+}
+
+.polaroid-bow {
+  position: absolute;
+  top: 0.2rem;
+  left: 50%;
+  width: 4rem;
+  height: 1.85rem;
+  transform: translateX(-50%);
+  z-index: 31;
+}
+
+.polaroid-bow::before,
+.polaroid-bow::after {
+  content: "";
+  position: absolute;
+  top: 0.25rem;
+  width: 1.7rem;
+  height: 1.4rem;
+  background: linear-gradient(145deg, var(--color-main), var(--color-accent));
+  border-radius: 55% 55% 42% 42%;
+  box-shadow: 0 2px 6px var(--color-shadow);
+}
+
+.polaroid-bow::before {
+  left: 0.1rem;
+  transform: rotate(-24deg);
+}
+
+.polaroid-bow::after {
+  right: 0.1rem;
+  transform: rotate(24deg);
+}
+
+.polaroid-bow-knot {
+  position: absolute;
+  top: 0.95rem;
+  left: 50%;
+  width: 0.55rem;
+  height: 0.95rem;
+  margin-left: -0.275rem;
+  border-radius: 2px;
+  background: linear-gradient(180deg, var(--color-deep), var(--color-main));
+  box-shadow: 0 1px 3px var(--color-shadow);
+}
+
+.polaroid-decor {
+  position: absolute;
+  font-size: 1rem;
+  color: var(--color-deep);
+  opacity: 0.85;
+  text-shadow: 0 1px 4px rgba(255, 255, 255, 0.8);
+  animation: decor-float 4s ease-in-out infinite;
+}
+
+.polaroid-decor--sparkle {
+  top: 2.5rem;
+  right: -0.35rem;
+  font-size: 1.15rem;
+  color: var(--color-accent);
+  animation-delay: 0.5s;
+}
+
+.polaroid-decor--heart {
+  top: 3.25rem;
+  left: -0.5rem;
+  font-size: 1.1rem;
+  animation-delay: 1s;
+}
+
+.polaroid-decor--dot {
+  bottom: 4.5rem;
+  right: -0.6rem;
+  font-size: 0.95rem;
+  animation-delay: 1.5s;
+}
+
+@keyframes decor-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-5px) rotate(8deg);
+  }
+}
+
+.polaroid--top .polaroid-photo-area {
+  position: relative;
+  border: 3px solid transparent;
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(135deg, var(--color-main), var(--color-accent), var(--color-main)) border-box;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+}
+
+.polaroid--top .polaroid-photo-area::before,
+.polaroid--top .polaroid-photo-area::after {
+  content: "";
+  position: absolute;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--color-accent);
+  opacity: 0.75;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.polaroid--top .polaroid-photo-area::before {
+  top: 0.35rem;
+  left: 0.35rem;
+}
+
+.polaroid--top .polaroid-photo-area::after {
+  top: 0.35rem;
+  right: 0.35rem;
 }
 
 .polaroid {
@@ -287,7 +447,7 @@ body {
   position: fixed;
   bottom: 1.25rem;
   right: 1.25rem;
-  z-index: 2;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
@@ -323,6 +483,10 @@ body {
   display: grid;
   grid-template-columns: repeat(4, minmax(3rem, 1fr));
   gap: 0.5rem 0.75rem;
+}
+
+.timer-grid--together {
+  grid-template-columns: repeat(3, minmax(3rem, 1fr));
 }
 
 .timer-unit {
@@ -370,6 +534,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 10;
+  pointer-events: auto;
   padding: 1rem 1.25rem;
   background: linear-gradient(
     to bottom,
@@ -417,6 +582,11 @@ body {
   align-items: center;
   gap: 1.75rem;
   padding: 0.5rem 1.25rem 3rem;
+  pointer-events: none;
+}
+
+.letters-main > * {
+  pointer-events: auto;
 }
 
 .letters-intro {

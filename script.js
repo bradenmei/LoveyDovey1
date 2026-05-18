@@ -92,21 +92,47 @@
     return { days, hours, minutes, seconds };
   }
 
+  function splitMonthsDaysHours(fromDate, toDate) {
+    let months = 0;
+    let cursor = new Date(fromDate.getTime());
+
+    while (true) {
+      const next = new Date(cursor.getTime());
+      next.setMonth(next.getMonth() + 1);
+      if (next > toDate) break;
+      months += 1;
+      cursor = next;
+    }
+
+    let remainingMs = toDate.getTime() - cursor.getTime();
+    if (remainingMs < 0) remainingMs = 0;
+
+    const days = Math.floor(remainingMs / 86400000);
+    remainingMs -= days * 86400000;
+    const hours = Math.floor(remainingMs / 3600000);
+
+    return { months: months, days: days, hours: hours };
+  }
+
   function updateTogetherTimer() {
+    const monthsEl = document.getElementById("timer-months");
     const daysEl = document.getElementById("timer-days");
     const hoursEl = document.getElementById("timer-hours");
-    const minutesEl = document.getElementById("timer-minutes");
-    const secondsEl = document.getElementById("timer-seconds");
-    if (!daysEl) return;
+    if (!monthsEl || !daysEl || !hoursEl) return;
 
-    let diff = Date.now() - RELATIONSHIP_START.getTime();
-    if (diff < 0) diff = 0;
+    const now = new Date();
+    let start = RELATIONSHIP_START;
+    if (now < start) {
+      monthsEl.textContent = "0";
+      daysEl.textContent = "0";
+      hoursEl.textContent = "0";
+      return;
+    }
 
-    const t = splitTime(Math.floor(diff / 1000));
+    const t = splitMonthsDaysHours(start, now);
+    monthsEl.textContent = t.months;
     daysEl.textContent = t.days;
     hoursEl.textContent = pad(t.hours);
-    minutesEl.textContent = pad(t.minutes);
-    secondsEl.textContent = pad(t.seconds);
   }
 
   function updateCountdownTimer() {
@@ -127,7 +153,7 @@
   }
 
   function initTimers() {
-    if (!document.getElementById("timer-days")) return;
+    if (!document.getElementById("timer-months")) return;
     updateTogetherTimer();
     updateCountdownTimer();
     setInterval(function () {
@@ -257,6 +283,8 @@
     const speed = reducedMotion ? HEART_SPEED * 0.35 : HEART_SPEED;
 
     hearts.forEach(function (heart) {
+      if (heart.paused) return;
+
       let x = heart.x + heart.vx * speed;
       let y = heart.y + heart.vy * speed;
       let vx = heart.vx;
@@ -309,7 +337,11 @@
       const speed = randomBetween(0.6, 1.2);
 
       heart.style.fontSize = sizeRem + "rem";
-      heart.textContent = "♥";
+
+      const glyph = document.createElement("span");
+      glyph.className = "heart-glyph";
+      glyph.textContent = "♥";
+      heart.appendChild(glyph);
 
       const tooltip = document.createElement("span");
       tooltip.className = "heart-tooltip";
@@ -318,6 +350,28 @@
 
       heart.style.left = pos.x - radius + "px";
       heart.style.top = pos.y - radius + "px";
+
+      heart.addEventListener("mouseenter", function () {
+        heart.paused = true;
+        heart.classList.add("is-hovered");
+        tooltip.textContent = randomCompliment();
+      });
+
+      heart.addEventListener("mouseleave", function () {
+        heart.paused = false;
+        heart.classList.remove("is-hovered");
+      });
+
+      heart.addEventListener("focus", function () {
+        heart.paused = true;
+        heart.classList.add("is-hovered");
+        tooltip.textContent = randomCompliment();
+      });
+
+      heart.addEventListener("blur", function () {
+        heart.paused = false;
+        heart.classList.remove("is-hovered");
+      });
 
       fragment.appendChild(heart);
 
@@ -328,6 +382,7 @@
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed,
         radius: radius,
+        paused: false,
       });
     }
 
