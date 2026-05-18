@@ -60,7 +60,7 @@
   <aside class="timer-panel" data-ui-zone aria-live="polite">
     <section class="timer-block" aria-label="Time together">
       <p class="timer-label">⏳ Together for</p>
-      <div class="timer-grid timer-grid--together">
+      <div class="timer-grid">
         <div class="timer-unit">
           <span id="timer-months" class="timer-value">0</span>
           <span class="timer-name">months</span>
@@ -73,12 +73,20 @@
           <span id="timer-hours" class="timer-value">0</span>
           <span class="timer-name">hours</span>
         </div>
+        <div class="timer-unit">
+          <span id="timer-minutes" class="timer-value">0</span>
+          <span class="timer-name">minutes</span>
+        </div>
       </div>
     </section>
 
     <section class="timer-block timer-block--countdown" aria-label="Countdown to next meeting">
       <p class="timer-label timer-label--meet">✈️ Next time we'll meet:</p>
       <div class="timer-grid">
+        <div class="timer-unit">
+          <span id="countdown-months" class="timer-value">0</span>
+          <span class="timer-name">months</span>
+        </div>
         <div class="timer-unit">
           <span id="countdown-days" class="timer-value">0</span>
           <span class="timer-name">days</span>
@@ -90,10 +98,6 @@
         <div class="timer-unit">
           <span id="countdown-minutes" class="timer-value">0</span>
           <span class="timer-name">minutes</span>
-        </div>
-        <div class="timer-unit">
-          <span id="countdown-seconds" class="timer-value">0</span>
-          <span class="timer-name">seconds</span>
         </div>
       </div>
     </section>

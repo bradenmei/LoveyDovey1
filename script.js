@@ -8,7 +8,7 @@
   // CHANGE THIS to your next visit — Calgary time (MDT, UTC−6)
   // Example: July 4, 2026 → "2026-07-04T00:00:00-06:00"
   // ═══════════════════════════════════════════════════════════════════
-  const NEXT_MEET_DATE = new Date("2026-07-04T00:00:00-06:00");
+  const NEXT_MEET_DATE = new Date("2026-08-15T00:00:00-06:00");
 
   const HEART_COMPLIMENTS = [
     "Your eyes",
@@ -84,15 +84,7 @@
     return HEART_COMPLIMENTS[Math.floor(Math.random() * HEART_COMPLIMENTS.length)];
   }
 
-  function splitTime(totalSeconds) {
-    const days = Math.floor(totalSeconds / 86400);
-    const hours = Math.floor((totalSeconds % 86400) / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-    return { days, hours, minutes, seconds };
-  }
-
-  function splitMonthsDaysHours(fromDate, toDate) {
+  function splitMonthsDaysHoursMinutes(fromDate, toDate) {
     let months = 0;
     let cursor = new Date(fromDate.getTime());
 
@@ -110,46 +102,45 @@
     const days = Math.floor(remainingMs / 86400000);
     remainingMs -= days * 86400000;
     const hours = Math.floor(remainingMs / 3600000);
+    remainingMs -= hours * 3600000;
+    const minutes = Math.floor(remainingMs / 60000);
 
-    return { months: months, days: days, hours: hours };
+    return { months: months, days: days, hours: hours, minutes: minutes };
+  }
+
+  function setTimerDisplay(prefix, values) {
+    document.getElementById(prefix + "-months").textContent = values.months;
+    document.getElementById(prefix + "-days").textContent = values.days;
+    document.getElementById(prefix + "-hours").textContent = pad(values.hours);
+    document.getElementById(prefix + "-minutes").textContent = pad(values.minutes);
+  }
+
+  function zeroTimerDisplay(prefix) {
+    setTimerDisplay(prefix, { months: 0, days: 0, hours: 0, minutes: 0 });
   }
 
   function updateTogetherTimer() {
-    const monthsEl = document.getElementById("timer-months");
-    const daysEl = document.getElementById("timer-days");
-    const hoursEl = document.getElementById("timer-hours");
-    if (!monthsEl || !daysEl || !hoursEl) return;
+    if (!document.getElementById("timer-months")) return;
 
     const now = new Date();
-    let start = RELATIONSHIP_START;
-    if (now < start) {
-      monthsEl.textContent = "0";
-      daysEl.textContent = "0";
-      hoursEl.textContent = "0";
+    if (now < RELATIONSHIP_START) {
+      zeroTimerDisplay("timer");
       return;
     }
 
-    const t = splitMonthsDaysHours(start, now);
-    monthsEl.textContent = t.months;
-    daysEl.textContent = t.days;
-    hoursEl.textContent = pad(t.hours);
+    setTimerDisplay("timer", splitMonthsDaysHoursMinutes(RELATIONSHIP_START, now));
   }
 
   function updateCountdownTimer() {
-    const daysEl = document.getElementById("countdown-days");
-    const hoursEl = document.getElementById("countdown-hours");
-    const minutesEl = document.getElementById("countdown-minutes");
-    const secondsEl = document.getElementById("countdown-seconds");
-    if (!daysEl) return;
+    if (!document.getElementById("countdown-months")) return;
 
-    let diff = NEXT_MEET_DATE.getTime() - Date.now();
-    if (diff < 0) diff = 0;
+    const now = new Date();
+    if (now >= NEXT_MEET_DATE) {
+      zeroTimerDisplay("countdown");
+      return;
+    }
 
-    const t = splitTime(Math.floor(diff / 1000));
-    daysEl.textContent = t.days;
-    hoursEl.textContent = pad(t.hours);
-    minutesEl.textContent = pad(t.minutes);
-    secondsEl.textContent = pad(t.seconds);
+    setTimerDisplay("countdown", splitMonthsDaysHoursMinutes(now, NEXT_MEET_DATE));
   }
 
   function initTimers() {
@@ -348,34 +339,7 @@
       tooltip.textContent = compliment;
       heart.appendChild(tooltip);
 
-      heart.style.left = pos.x - radius + "px";
-      heart.style.top = pos.y - radius + "px";
-
-      heart.addEventListener("mouseenter", function () {
-        heart.paused = true;
-        heart.classList.add("is-hovered");
-        tooltip.textContent = randomCompliment();
-      });
-
-      heart.addEventListener("mouseleave", function () {
-        heart.paused = false;
-        heart.classList.remove("is-hovered");
-      });
-
-      heart.addEventListener("focus", function () {
-        heart.paused = true;
-        heart.classList.add("is-hovered");
-        tooltip.textContent = randomCompliment();
-      });
-
-      heart.addEventListener("blur", function () {
-        heart.paused = false;
-        heart.classList.remove("is-hovered");
-      });
-
-      fragment.appendChild(heart);
-
-      hearts.push({
+      const heartObj = {
         el: heart,
         x: pos.x,
         y: pos.y,
@@ -383,7 +347,36 @@
         vy: Math.sin(angle) * speed,
         radius: radius,
         paused: false,
+        tooltip: tooltip,
+      };
+
+      heartObj.el.style.left = pos.x - radius + "px";
+      heartObj.el.style.top = pos.y - radius + "px";
+
+      heartObj.el.addEventListener("mouseenter", function () {
+        heartObj.paused = true;
+        heartObj.el.classList.add("is-hovered");
+        heartObj.tooltip.textContent = randomCompliment();
       });
+
+      heartObj.el.addEventListener("mouseleave", function () {
+        heartObj.paused = false;
+        heartObj.el.classList.remove("is-hovered");
+      });
+
+      heartObj.el.addEventListener("focus", function () {
+        heartObj.paused = true;
+        heartObj.el.classList.add("is-hovered");
+        heartObj.tooltip.textContent = randomCompliment();
+      });
+
+      heartObj.el.addEventListener("blur", function () {
+        heartObj.paused = false;
+        heartObj.el.classList.remove("is-hovered");
+      });
+
+      fragment.appendChild(heart);
+      hearts.push(heartObj);
     }
 
     field.appendChild(fragment);
