@@ -12,6 +12,11 @@
   --radius-lg: 1.25rem;
   --radius-pill: 999px;
   --transition: 0.25s ease;
+  --polaroid-decor-white-stroke:
+    drop-shadow(1px 1px 0 #fff)
+    drop-shadow(-1px -1px 0 #fff)
+    drop-shadow(1px -1px 0 #fff)
+    drop-shadow(-1px 1px 0 #fff);
 }
 
 *,
@@ -241,7 +246,7 @@ body {
   transform: translateX(-50%);
   z-index: 31;
   object-fit: contain;
-  filter: drop-shadow(0 3px 8px var(--color-shadow));
+  filter: var(--polaroid-decor-white-stroke) drop-shadow(0 3px 8px var(--color-shadow));
   pointer-events: none;
 }
 
@@ -263,7 +268,7 @@ body {
   max-height: 1.25rem;
   object-fit: contain;
   opacity: 0.9;
-  filter: drop-shadow(0 2px 4px rgba(92, 61, 74, 0.15));
+  filter: var(--polaroid-decor-white-stroke) drop-shadow(0 2px 4px rgba(92, 61, 74, 0.15));
   animation: decor-float 4s ease-in-out infinite;
 }
 
