@@ -182,8 +182,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 1.5rem; /* This shrinks the icon significantly */
-  height: 1.5rem;
+  width: 2.75rem; /* Made the icon MUCH bigger */
+  height: 2.75rem; /* Made the icon MUCH bigger */
   padding: 0;
   border: none;
   background: transparent;
@@ -208,7 +208,8 @@ body {
 }
 
 .hearts-hint__message {
-  opacity: 0 !important; /* Forces it to hide */
+  opacity: 0; /* Removed the !important that broke it */
+  visibility: hidden;
   transform: translateX(-10px);
   pointer-events: none;
   margin: 0;
@@ -216,19 +217,22 @@ body {
   font-family: var(--font-display);
   font-size: 0.92rem;
   font-style: italic;
-  font-weight: 400;
+  font-weight: 600;
   line-height: 1.35;
   color: var(--color-text);
   white-space: nowrap;
-  background: rgba(255, 251, 252, 0.82);
+  background: rgba(255, 251, 252, 0.95);
   backdrop-filter: blur(8px);
   border-radius: var(--radius-pill);
   box-shadow: 0 4px 18px var(--color-shadow);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
 }
 
-.hearts-hint:hover .hearts-hint__message {
-  opacity: 1 !important; /* Forces it to show on hover */
+/* This guarantees the message appears when hovering the icon */
+.hearts-hint:hover .hearts-hint__message,
+.hearts-hint__trigger:hover ~ .hearts-hint__message {
+  opacity: 1 !important;
+  visibility: visible !important;
   transform: translateX(0);
 }
 
@@ -834,4 +838,28 @@ body {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* --- OVERRIDES FOR FLOATING HEARTS VISIBILITY --- */
+.floating-heart {
+  opacity: 1 !important; /* Removes the 0.7 transparency fading them out */
+}
+
+.floating-heart img {
+  /* Thicker 2px white border to make them pop */
+  filter: drop-shadow(2px 2px 0px #fff) 
+          drop-shadow(-2px -2px 0px #fff) 
+          drop-shadow(2px -2px 0px #fff) 
+          drop-shadow(-2px 2px 0px #fff) 
+          drop-shadow(0 3px 8px var(--color-shadow)) !important;
+}
+
+.floating-heart:hover img,
+.floating-heart:focus-visible img,
+.floating-heart.is-hovered img {
+  filter: drop-shadow(2px 2px 0px #fff) 
+          drop-shadow(-2px -2px 0px #fff) 
+          drop-shadow(2px -2px 0px #fff) 
+          drop-shadow(-2px 2px 0px #fff) 
+          drop-shadow(0 6px 16px rgba(232, 164, 184, 0.55)) !important;
 }
