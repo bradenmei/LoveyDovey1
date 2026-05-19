@@ -58,7 +58,13 @@
     "your giggling",
   ];
 
-  const HEART_COUNT = 16;
+  const HEART_SPRITES = [
+    "decorations/pinkheart.png",
+    "decorations/purpleheart.png",
+    "decorations/darkpinkheart.png",
+  ];
+
+  const HEART_COUNT = 18;
   const OBSTACLE_PADDING = 28;
   const HEART_SPEED = 0.45;
 
@@ -82,6 +88,26 @@
 
   function randomCompliment() {
     return HEART_COMPLIMENTS[Math.floor(Math.random() * HEART_COMPLIMENTS.length)];
+  }
+
+  function buildHeartSpritePool() {
+    const perType = HEART_COUNT / HEART_SPRITES.length;
+    const pool = [];
+
+    HEART_SPRITES.forEach(function (src) {
+      for (let i = 0; i < perType; i++) {
+        pool.push(src);
+      }
+    });
+
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const temp = pool[i];
+      pool[i] = pool[j];
+      pool[j] = temp;
+    }
+
+    return pool;
   }
 
   function splitMonthsDaysHoursMinutes(fromDate, toDate) {
@@ -313,6 +339,7 @@
 
     const obstacles = getObstacleRects();
     const fragment = document.createDocumentFragment();
+    const spritePool = buildHeartSpritePool();
 
     for (let i = 0; i < HEART_COUNT; i++) {
       const compliment = randomCompliment();
@@ -321,17 +348,20 @@
       heart.className = "floating-heart";
       heart.setAttribute("aria-label", compliment);
 
-      const sizeRem = randomBetween(2.2, 3.2);
-      const radius = sizeRem * 8;
+      const sizePx = randomBetween(44, 62);
+      const radius = sizePx / 2;
       const pos = spawnPosition(radius, obstacles);
       const angle = randomBetween(0, Math.PI * 2);
       const speed = randomBetween(0.6, 1.2);
 
-      heart.style.fontSize = sizeRem + "rem";
+      heart.style.width = sizePx + "px";
+      heart.style.height = sizePx + "px";
 
-      const glyph = document.createElement("span");
+      const glyph = document.createElement("img");
       glyph.className = "heart-glyph";
-      glyph.textContent = "♥";
+      glyph.src = spritePool[i];
+      glyph.alt = "";
+      glyph.draggable = false;
       heart.appendChild(glyph);
 
       const tooltip = document.createElement("span");
