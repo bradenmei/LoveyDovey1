@@ -348,21 +348,19 @@
       heart.className = "floating-heart";
       heart.setAttribute("aria-label", compliment);
 
-      const sizePx = randomBetween(44, 62);
-      const radius = sizePx / 2;
+      const sizeRem = randomBetween(2, 3.25);
+      const radius = sizeRem * 10;
       const pos = spawnPosition(radius, obstacles);
       const angle = randomBetween(0, Math.PI * 2);
       const speed = randomBetween(0.6, 1.2);
 
-      heart.style.width = sizePx + "px";
-      heart.style.height = sizePx + "px";
+      heart.style.fontSize = sizeRem + "rem";
 
-      const glyph = document.createElement("img");
-      glyph.className = "heart-glyph";
-      glyph.src = spritePool[i];
-      glyph.alt = "";
-      glyph.draggable = false;
-      heart.appendChild(glyph);
+      const heartImg = document.createElement("img");
+      heartImg.src = spritePool[i];
+      heartImg.alt = "";
+      heartImg.draggable = false;
+      heart.appendChild(heartImg);
 
       const tooltip = document.createElement("span");
       tooltip.className = "heart-tooltip";
