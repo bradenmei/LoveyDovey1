@@ -182,8 +182,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2.75rem; /* Made the icon MUCH bigger */
-  height: 2.75rem; /* Made the icon MUCH bigger */
+  width: 3.5rem;  /* Increased from 2.75rem */
+  height: 3.5rem; /* Increased from 2.75rem */
   padding: 0;
   border: none;
   background: transparent;
